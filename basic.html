@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+</head>
+<body>
+    <h1>Contact Us</h1>
+    <form id="contact-form">
+        <label for="first-name">First Name:</label>
+        <input type="text" id="first-name" name="firstName" required><br><br>
+
+        <label for="last-name">Last Name:</label>
+        <input type="text" id="last-name" name="lastName" required><br><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4" required></textarea><br><br>
+
+        <button type="submit">Send</button>
+    </form>
+
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS with your user ID
+        emailjs.init("Tushar_Swami");
+
+        // Handle form submission
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            const firstName = formData.get('firstName');
+            const lastName = formData.get('lastName');
+            const message = formData.get('message');
+
+            emailjs.send('service_iy6y648', 'template_5619y1u', {
+                firstName: firstName,
+                lastName: lastName,
+                message: message
+            })
+            .then(function(response) {
+                alert('Message sent successfully!');
+                form.reset();
+            }, function(error) {
+                alert('Failed to send message.');
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

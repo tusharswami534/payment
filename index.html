@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Step Payment Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    .form-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    .form-container label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .form-container button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .form-container button:hover {
+      background-color: #0056b3;
+    }
+    .form-step {
+      display: none;
+    }
+    .form-step.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <form id="payment-form">
+      <div id="step-1" class="form-step active">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <button type="button" onclick="goToStep2()">Next</button>
+      </div>
+
+      <div id="step-2" class="form-step">
+        <label for="card-number">Card Number:</label>
+        <input type="text" id="card-number" name="card-number" required>
+
+        <label for="expiry-date">Expiry Date (MM/YY):</label>
+        <input type="text" id="expiry-date" name="expiry-date" required>
+
+        <label for="cvv">CVV:</label>
+        <input type="text" id="cvv" name="cvv" required>
+
+        <label for="mobile-number">Mobile Number:</label>
+        <input type="text" id="mobile-number" name="mobile-number" required>
+
+        <button type="button" onclick="goToStep1()">Previous</button>
+        <button type="button" onclick="submitPayment()">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    function goToStep1() {
+      document.getElementById('step-1').classList.add('active');
+      document.getElementById('step-2').classList.remove('active');
+    }
+
+    function goToStep2() {
+      if (validateStep1()) {
+        document.getElementById('step-1').classList.remove('active');
+        document.getElementById('step-2').classList.add('active');
+      }
+    }
+
+    function validateStep1() {
+      var name = document.getElementById('name').value;
+      var amount = document.getElementById('amount').value;
+      var email = document.getElementById('email').value;
+      if (name && amount && email) {
+        return true;
+      } else {
+        Swal.fire({
+          title: 'Validation Error!',
+          text: 'Please fill out all required fields.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return false;
+      }
+    }
+
+    function submitPayment() {
+      if (validateStep2()) {
+        Swal.fire({
+          title: 'Payment Successful!',
+          text: 'Thank you for your payment.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          document.getElementById('payment-form').reset();
+          goToStep1();
+        });
+      }
+    }
+
+    function validateStep2() {
+      var cardNumber = document.getElementById('card-number').value;
+      var expiryDate = document.getElementById('expiry-date').value;
+      var cvv = document.getElementById('cvv').value;
+      var mobileNumber = document.getElementById('mobile-number').value;
+      if (cardNumber && expiryDate && cvv && mobileNumber) {
+        return true;
+      } else {
+        Swal.fire({
+          title: 'Validation Error!',
+          text: 'Please fill out all required fields.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+        return false;
+      }
+    }
+  </script>
+
+</body>
+</html>
